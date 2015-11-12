@@ -1,0 +1,31 @@
+
+correct_email = false
+until correct_email do
+puts "Enter email"
+email = gets.chomp
+  current_user = User.find_by_email(email)
+  current_user.nil? ? nil : correct_email = true
+  end
+
+
+done = false
+until done
+puts "Enter 1 to visit short URL, enter 2 to create short URL, enter 3 to quit"
+option = gets.chomp.to_i
+case option
+when 1
+  puts "Type in the shortened URL"
+  short_url = gets.chomp
+  long_url = ShortenedUrl.find_by_short_url(short_url).long_url
+  Visit.record_visit(current_user.id, ShortenedUrl.find_by_short_url(short_url).id)
+  Launchy.open( long_url )
+when 2
+  puts "Type in long URL"
+  long_url = gets.chomp
+  s = ShortenedUrl.create_for_user_and_long_url!(current_user.id, long_url)
+  puts ShortenedUrl.last.short_url
+when 3
+  done = true
+  break
+end
+end
